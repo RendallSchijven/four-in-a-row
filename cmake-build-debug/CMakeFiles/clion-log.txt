@@ -1,0 +1,4 @@
+C:\Users\renda\.CLion2017.3\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /cygdrive/c/Users/renda/Desktop/Git/four-in-a-row
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/cmake-build-debug
