@@ -25,72 +25,7 @@ void C4Bot::run() {
 	}
 }
 
-/*State mcTrial(const State &board)
-{
-    State testBoard = board;
-    std::vector<Move> moves = getMoves(board);
-
-    while(moves.size() > 0)
-    {
-        Move m = moves[rand() % moves.size()];
-        testBoard = doMove(testBoard, m);
-        moves = getMoves(testBoard);
-    }
-    return testBoard;
-}
-
-void mcUpdateScores(std::array<int,7> &scores, const State &board, const Player &player)
-{
-    Player winner = getWinner(board);
-
-    for(int i = 0; i < 7; i++)
-    {
-        //If human won
-        if(winner != player)
-        {
-            if(board[i] == Player::X) scores[i] += mc_other;
-            if(board[i] == Player::O) scores[i] -= mc_match;
-        }
-
-        //If code won
-        if(winner == player)
-        {
-            if(board[i] == Player::O) scores[i] += mc_match;
-            if(board[i] == Player::X) scores[i] -= mc_other;
-        }
-    }
-}
-
-Move getBestMove(const std::array<int, 9> &scores, const State &board)
-{
-    int highScore = 0;
-
-    std::vector<int> highestPositions;
-    for(int i = 0; i < 7; i++)
-    {
-        if(scores[i] >= highScore && board[i] == Player::None)
-        {
-            highScore = scores[i];
-            highestPositions.push_back(i);
-        }
-    }
-    Move m = highestPositions[rand() % highestPositions.size()];
-    return m;
-}
-
-Move mcMove(const State &board)
-{
-    std::array<int, 7> scores = {0,0,0,0,0,0,0};
-    for(int i = 0; i < n_trials; i++)
-    {
-        State tempBoard = mcTrial(board);
-        mcUpdateScores(scores, tempBoard, getCurrentPlayer(board));
-    }
-
-    return getBestMove(scores, board);
-}
-
-int evaluateLine(int row1, int col1, int row2, int col2, int row3, int col3, const State &board) {
+/*int evaluateLine(int row1, int col1, int row2, int col2, int row3, int col3, const State &board) {
     int score = 0;
 
     // First cell
@@ -165,6 +100,77 @@ int eval(const State &board, const Player &player)
     return score;
 }*/
 
+State mcTrial(const State &board)
+{
+    State testBoard = board;
+    std::vector<Move> moves = getMoves(board);
+
+    while(moves.size() > 0)
+    {
+        Move m = moves[rand() % moves.size()];
+        testBoard = doMove(testBoard, m);
+        moves = getMoves(testBoard);
+    }
+    return testBoard;
+}
+
+void mcUpdateScores(std::array<int,7> &scores, const State &board, const Player &player)
+{
+    Player winner = getWinner(board);
+
+    for(int row = 0; row < 6; row++)
+    {
+        for(int col = 0; col < 7; col++)
+        {
+            //If human won
+            if(winner != player)
+            {
+                if(board[row][col] == Player::X) scores[col] += mc_other;
+                if(board[row][col] == Player::O) scores[col] -= mc_match;
+            }
+
+            //If code won
+            if(winner == player)
+            {
+                if(board[row][col] == Player::O) scores[col] += mc_match;
+                if(board[row][col] == Player::X) scores[col] -= mc_other;
+            }
+        }
+    }
+}
+
+Move getBestMove(const std::array<int, 7> &scores, const State &board)
+{
+    int highScore = 0;
+
+    std::vector<int> highestPositions;
+    for(int row = 0; row < 6; row++)
+    {
+        for(int col = 0; col < 7; col++)
+        {
+            if(scores[col] >= highScore && board[row][col] == Player::None)
+            {
+                highScore = scores[col];
+                highestPositions.push_back(col);
+            }
+        }
+    }
+    Move m = highestPositions[rand() % highestPositions.size()];
+    return m;
+}
+
+Move mcMove(const State &board)
+{
+    std::array<int, 7> scores = {0,0,0,0,0,0,0};
+    for(int i = 0; i < n_trials; i++)
+    {
+        State tempBoard = mcTrial(board);
+        mcUpdateScores(scores, tempBoard, getCurrentPlayer(board));
+    }
+
+    return getBestMove(scores, board);
+}
+
 int eval(const Player player, const State board, int depth){
     Player opponent = (player == Player::X) ? Player::O : Player::X;
 
@@ -183,19 +189,21 @@ std::vector<int> minimax(const State &board, const Player &player, int depth, in
     int score;
     int bestMove = -1;
 
-    if(depth < 1|| moves.size() == 1){
+    if(depth == 0|| moves.size() == 1){
         score = eval(player, board, depth);
         return {score,bestMove};
     }
     else
     {
+        depth--;
+
         for(Move m: moves)
         {
             State tempboard = doMove(board, m);;
 
             if(player == Player::O) //Computer
             {
-                score = minimax(tempboard, Player::X, depth--, alpha, beta)[0];
+                score = minimax(tempboard, Player::X, depth, alpha, beta)[0];
 
                 if(score > alpha)
                 {
@@ -205,7 +213,7 @@ std::vector<int> minimax(const State &board, const Player &player, int depth, in
             }
             else //Human
             {
-                score = minimax(tempboard, Player::O, depth--, alpha, beta)[0];
+                score = minimax(tempboard, Player::O, depth, alpha, beta)[0];
 
                 if(score < beta)
                 {
@@ -222,21 +230,19 @@ std::vector<int> minimax(const State &board, const Player &player, int depth, in
 
 Move alphaBeta(const State &board, int depth)
 {
-    return minimax(board, getCurrentPlayer(board), depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max())[1];
+    Move result = minimax(board, getCurrentPlayer(board), depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max())[1];
+    std::vector<Move> moves = getMoves(board);
+    return {(result != -1) ? result : *select_randomly(moves.begin(), moves.end())};
 }
 
 void C4Bot::move(int timeout) {
-	// Do something more intelligent here instead of returning a random move
     //"C:\Users\renda\Desktop\c4ui.exe" "C:\Users\renda\Desktop\Git\four-in-a-row\cmake-build-debug\four-in-a-row.exe"
 
     //Monte carlo
-    //std::cout << "place_disc " << mcMove(state) << std::endl;
+    std::cout << "place_disc " << mcMove(state) << std::endl;
 
-    //Minimax
-/*    if(state[3][5] == Player::None){
-        std::cout << "place_disc " << 3 << std::endl;
-    }*/
-    std::cout << "place_disc " << alphaBeta(state, 9) << std::endl;
+    //Alpha beta
+    //std::cout << "place_disc " << alphaBeta(state, 9) << std::endl;
 
     //Original
 	//std::vector<Move> moves = getMoves(state);
