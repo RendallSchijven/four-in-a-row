@@ -120,10 +120,10 @@ void C4Bot::backPropagate(Node* n, int score) {
 }
 
 int C4Bot::simulate(State s){
-    Player terminal = getWinner(s);
-    if((terminal == Player::O && your_botid == 0) || (terminal == Player::X && your_botid == 1)){//lose
+    Player winner = getWinner(s);
+    if((winner == Player::O && your_botid == 0) || (winner == Player::X && your_botid == 1)){//lose
         return 0;
-    } else if ((terminal == Player::X && your_botid == 0) || (terminal == Player::O && your_botid == 1)){ //win
+    } else if ((winner == Player::X && your_botid == 0) || (winner == Player::O && your_botid == 1)){ //win
         return 100;
     }
     std::vector<Move> moves = getMoves(s);
@@ -198,7 +198,7 @@ Move C4Bot::makeMove(int timeout) {
         return moves.at(0);
     }
     Node initial{ nullptr, state, 0, 0, 0, 1 };
-    while (timeout - getTimeElapsed() > 175) {
+    while (timeout - getTimeElapsed() > 500) {
         Node* current = select(&initial);
         expand(current);
         int score = simulate(current->getState());
@@ -217,9 +217,6 @@ Move C4Bot::makeMove(int timeout) {
 
 void C4Bot::move(int timeout) {
     //"C:\Users\renda\Desktop\c4ui.exe" "C:\Users\renda\Desktop\Git\four-in-a-row\cmake-build-debug\four-in-a-row.exe"
-
-    //Monte carlo
-    //std::cout << "place_disc " << mcMove(state) << std::endl;
 
     //Monte carlo tree search
     begin = std::chrono::steady_clock::now();
