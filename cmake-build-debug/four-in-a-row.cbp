@@ -95,6 +95,12 @@
 		<Unit filename="/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/main.cpp">
 			<Option target="four-in-a-row"/>
 		</Unit>
+		<Unit filename="/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/node.cpp">
+			<Option target="four-in-a-row"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/node.h">
+			<Option target="four-in-a-row"/>
+		</Unit>
 		<Unit filename="/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

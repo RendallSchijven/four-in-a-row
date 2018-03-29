@@ -2,12 +2,11 @@
 // Aswin van Woudenberg & Rendall Schijven
 
 #include "c4bot.h"
+#include "node.h"
+
 #include <iostream>
 #include <sstream>
-
-unsigned const n_trials = 1000;
-unsigned const mc_match = 1;
-unsigned const mc_other = 1;
+#include <chrono>
 
 void C4Bot::run() {
 	std::string line;
@@ -25,153 +24,9 @@ void C4Bot::run() {
 	}
 }
 
-/*int evaluateLine(int row1, int col1, int row2, int col2, int row3, int col3, const State &board) {
-    int score = 0;
-
-    // First cell
-    if (board[row1][col1] == Player::O) {
-        score = 1;
-    }
-    else if (board[row1][col1] == Player::X) {
-        score = -1;
-    }
-
-    // Second cell
-    if (board[row2][col2] == Player::O) {
-        if (score == 1) {   // cell1 is mySeed
-            score = 10;
-        }
-        else if (score == -1) {  // cell1 is oppSeed
-            return 0;
-        }
-        else {  // cell1 is empty
-            score = 1;
-        }
-    }
-    else if (board[row2][col2] == Player::X) {
-        if (score == -1) { // cell1 is oppSeed
-            score = -10;
-        }
-        else if (score == 1) { // cell1 is mySeed
-            return 0;
-        }
-        else {  // cell1 is empty
-            score = -1;
-        }
-    }
-
-    // Third cell
-    if (board[row3][col3] == Player::O) {
-        if (score > 0) {  // cell1 and/or cell2 is mySeed
-            score *= 10;
-        }
-        else if (score < 0) {  // cell1 and/or cell2 is oppSeed
-            return 0;
-        }
-        else {  // cell1 and cell2 are empty
-            score = 1;
-        }
-    }
-    else if (board[row3][col3] == Player::X) {
-        if (score < 0) {  // cell1 and/or cell2 is oppSeed
-            score *= 10;
-        }
-        else if (score > 1) {  // cell1 and/or cell2 is mySeed
-            return 0;
-        }
-        else {  // cell1 and cell2 are empty
-            score = -1;
-        }
-    }
-    return score;
-}
-
-int eval(const State &board, const Player &player)
+//Start alpha beta
+int eval(const Player player, const State board, int depth)
 {
-    int score = 0;
-    score += evaluateLine(0, 0, 0, 1, 0, 2, board);  // row 0
-    score += evaluateLine(1, 0, 1, 1, 1, 2, board);  // row 1
-    score += evaluateLine(2, 0, 2, 1, 2, 2, board);  // row 2
-    score += evaluateLine(0, 0, 1, 0, 2, 0, board);  // col 0
-    score += evaluateLine(0, 1, 1, 1, 2, 1, board);  // col 1
-    score += evaluateLine(0, 2, 1, 2, 2, 2, board);  // col 2
-    score += evaluateLine(0, 0, 1, 1, 2, 2, board);  // diagonal
-    score += evaluateLine(0, 2, 1, 1, 2, 0, board);  // alternate diagonal
-    return score;
-}*/
-
-State mcTrial(const State &board)
-{
-    State testBoard = board;
-    std::vector<Move> moves = getMoves(board);
-
-    while(moves.size() > 0)
-    {
-        Move m = moves[rand() % moves.size()];
-        testBoard = doMove(testBoard, m);
-        moves = getMoves(testBoard);
-    }
-    return testBoard;
-}
-
-void mcUpdateScores(std::array<int,7> &scores, const State &board, const Player &player)
-{
-    Player winner = getWinner(board);
-
-    for(int row = 0; row < 6; row++)
-    {
-        for(int col = 0; col < 7; col++)
-        {
-            //If human won
-            if(winner != player)
-            {
-                if(board[row][col] == Player::X) scores[col] += mc_other;
-                if(board[row][col] == Player::O) scores[col] -= mc_match;
-            }
-
-            //If code won
-            if(winner == player)
-            {
-                if(board[row][col] == Player::O) scores[col] += mc_match;
-                if(board[row][col] == Player::X) scores[col] -= mc_other;
-            }
-        }
-    }
-}
-
-Move getBestMove(const std::array<int, 7> &scores, const State &board)
-{
-    int highScore = 0;
-
-    std::vector<int> highestPositions;
-    for(int row = 0; row < 6; row++)
-    {
-        for(int col = 0; col < 7; col++)
-        {
-            if(scores[col] >= highScore && board[row][col] == Player::None)
-            {
-                highScore = scores[col];
-                highestPositions.push_back(col);
-            }
-        }
-    }
-    Move m = highestPositions[rand() % highestPositions.size()];
-    return m;
-}
-
-Move mcMove(const State &board)
-{
-    std::array<int, 7> scores = {0,0,0,0,0,0,0};
-    for(int i = 0; i < n_trials; i++)
-    {
-        State tempBoard = mcTrial(board);
-        mcUpdateScores(scores, tempBoard, getCurrentPlayer(board));
-    }
-
-    return getBestMove(scores, board);
-}
-
-int eval(const Player player, const State board, int depth){
     Player opponent = (player == Player::X) ? Player::O : Player::X;
 
     if(getWinner(board) == player){
@@ -231,18 +86,147 @@ std::vector<int> minimax(const State &board, const Player &player, int depth, in
 Move alphaBeta(const State &board, int depth)
 {
     Move result = minimax(board, getCurrentPlayer(board), depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max())[1];
+
     std::vector<Move> moves = getMoves(board);
     return {(result != -1) ? result : *select_randomly(moves.begin(), moves.end())};
+}
+//End alpha beta
+
+//Begin monte carlo tree search
+int C4Bot::getTimeElapsed() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count();
+}
+
+double C4Bot::selectfn(Node* n) {
+    double vi = n->getUtility();
+    int ni = n->getVisits();
+    int np = n->getParent()->getVisits();
+    return (vi + sqrt(2 * log(np) / ni));
+}
+
+double C4Bot::selectfnOP(Node* n) { //modified UCT so that the more you visit a node, the greater the score
+    double vi = n->getUtility();
+    int ni = n->getVisits();
+    int np = n->getParent()->getVisits();
+    return (vi - sqrt(2 * log(np) / ni));
+}
+
+void C4Bot::backPropagate(Node* n, int score) {
+    n->visit();
+    n->addUtility(score);
+    if (n->getParent()) {
+        backPropagate(n->getParent(), score);
+    }
+}
+
+int C4Bot::simulate(State s){
+    Player terminal = getWinner(s);
+    if((terminal == Player::O && your_botid == 0) || (terminal == Player::X && your_botid == 1)){//lose
+        return 0;
+    } else if ((terminal == Player::X && your_botid == 0) || (terminal == Player::O && your_botid == 1)){ //win
+        return 100;
+    }
+    std::vector<Move> moves = getMoves(s);
+    if (moves.size() == 0){ //draw
+        return 50;
+    }
+    Move best = moves.at(std::rand()%(moves.size()));
+    s = doMove(s, best);
+    return simulate(s);
+}
+
+void C4Bot::expand(Node* n) {
+    std::vector<Move> moves = getMoves(state);
+    for (size_t i = 0; i < moves.size(); i++) { //simulates player move
+        State s = doMove(state, moves.at(i));
+        Node* newNode = new Node(n, s, moves.at(i), 0, 0, 2);
+        n->addChild(newNode);
+        if (getWinner(s) == Player::None && getMoves(n->getState()).size() > 0) {
+            std::vector<Move> movesOP = getMoves(s);
+            for (size_t j = 0; j < movesOP.size(); j++) {
+                State newState = doMove(s, movesOP.at(j));
+                Node* newNodeOP = new Node(newNode, newState, movesOP.at(j), 0, 0, 1);
+                newNode->addChild(newNodeOP);
+            }
+        }
+    }
+}
+
+Node* C4Bot::select(Node* n) {
+    if (n->getVisits() == 0 || getWinner(n->getState()) != Player::None || getMoves(n->getState()).size() == 0) { //no visits or is terminal
+        return n;
+    }
+    Children* minList = n->getChildren();
+    for (size_t i = 0; i < minList->size(); i++) { //if a min node hasn't been visited, visit a random child of its
+        if (minList->at(i)->getVisits() == 0) {
+            return (minList->at(i));
+        }
+    }
+    double score = 0;
+    Node* result = minList->at(0);
+    for (size_t i = 0; i < minList->size(); i++) { //chooses the min node with the highest score
+        double newScore = selectfn(minList->at(i));
+        if (newScore > score && result->getChildren()->size() > 0) {
+            score = newScore;
+            result = minList->at(i);
+        }
+    }
+    Children* maxList = result->getChildren();
+    for (size_t i = 0; i < maxList->size(); i++) {
+        if (maxList->at(i)->getVisits() == 0) {//if a max node hasn't been visited, select that one
+            return maxList->at(i);
+        }
+    }
+    double score2 = std::numeric_limits<double>::max();
+    Node* finalResult = nullptr;
+    for (size_t i = 0; i < maxList->size(); i++) { //all max nodes have been visited, select the one with the lowest score
+        double newScore = selectfnOP(maxList->at(i));
+        if (newScore < score2) {
+            score2 = newScore;
+            finalResult = maxList->at(i);
+        }
+    }
+    return finalResult;
+}
+
+Move C4Bot::makeMove(int timeout) {
+    // std::vector<Move> moves = getMoves(state);
+    // return *select_randomly(moves.begin(), moves.end());
+
+    std::vector<Move> moves = getMoves(state);
+    if (moves.size() == 1) {
+        return moves.at(0);
+    }
+    Node initial{ nullptr, state, 0, 0, 0, 1 };
+    while (timeout - getTimeElapsed() > 175) {
+        Node* current = select(&initial);
+        expand(current);
+        int score = simulate(current->getState());
+        backPropagate(current, score);
+    }
+    double bestScore = 0;
+    Move move(0);
+    for(size_t i = 0; i<initial.getChildren()->size(); i++){
+        if (initial.getChildren()->at(i)->getUtility() > bestScore){
+            bestScore = initial.getChildren()->at(i)->getUtility();
+            move = initial.getChildren()->at(i)->getMove();
+        }
+    }
+    return move;
 }
 
 void C4Bot::move(int timeout) {
     //"C:\Users\renda\Desktop\c4ui.exe" "C:\Users\renda\Desktop\Git\four-in-a-row\cmake-build-debug\four-in-a-row.exe"
 
     //Monte carlo
-    std::cout << "place_disc " << mcMove(state) << std::endl;
+    //std::cout << "place_disc " << mcMove(state) << std::endl;
+
+    //Monte carlo tree search
+    begin = std::chrono::steady_clock::now();
+    std::cout << "place_disc " << makeMove(time_per_move + 10000/30) << std::endl;
 
     //Alpha beta
-    //std::cout << "place_disc " << alphaBeta(state, 9) << std::endl;
+    //std::cout << "place_disc " << alphaBeta(state, 10) << std::endl;
 
     //Original
 	//std::vector<Move> moves = getMoves(state);
