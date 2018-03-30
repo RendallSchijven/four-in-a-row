@@ -25,6 +25,24 @@ void C4Bot::run() {
 }
 
 //Start alpha beta
+int C4Bot::evaluate(const Player player, const State board)
+{
+    Player opponent = (player == Player::X) ? Player::O : Player::X;
+
+    //if(getWinner(board) == player) return 10000;
+    //if(getWinner(board) == opponent) return -10000;
+
+    int utility = 138;
+    int score = 0;
+    for (int i = 0; i < 6; i++)
+        for (int j = 0; j < 7; j++)
+            if (board[i][j] == player)
+                score += C4Bot::evalTable[i][j];
+            else if (board[i][j] == opponent)
+                score -= C4Bot::evalTable[i][j];
+    return utility + score;
+}
+
 int eval(const Player player, const State board, int depth)
 {
     Player opponent = (player == Player::X) ? Player::O : Player::X;
@@ -37,7 +55,7 @@ int eval(const Player player, const State board, int depth)
     } else return 0;
 }
 
-std::vector<int> minimax(const State &board, const Player &player, int depth, int alpha, int beta)
+std::vector<int> C4Bot::minimax(const State &board, const Player &player, int depth, int alpha, int beta)
 {
     std::vector<Move> moves = getMoves(board);
 
@@ -45,7 +63,7 @@ std::vector<int> minimax(const State &board, const Player &player, int depth, in
     int bestMove = -1;
 
     if(depth == 0|| moves.size() == 1){
-        score = eval(player, board, depth);
+        score = evaluate(player, board);
         return {score,bestMove};
     }
     else
@@ -56,7 +74,7 @@ std::vector<int> minimax(const State &board, const Player &player, int depth, in
         {
             State tempboard = doMove(board, m);;
 
-            if(player == Player::O) //Computer
+            if(player == Player::O)
             {
                 score = minimax(tempboard, Player::X, depth, alpha, beta)[0];
 
@@ -66,7 +84,7 @@ std::vector<int> minimax(const State &board, const Player &player, int depth, in
                     bestMove = m;
                 }
             }
-            else //Human
+            else
             {
                 score = minimax(tempboard, Player::O, depth, alpha, beta)[0];
 
@@ -83,7 +101,7 @@ std::vector<int> minimax(const State &board, const Player &player, int depth, in
     }
 }
 
-Move alphaBeta(const State &board, int depth)
+Move C4Bot::alphaBeta(const State &board, int depth)
 {
     Move result = minimax(board, getCurrentPlayer(board), depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max())[1];
 
@@ -214,16 +232,17 @@ Move C4Bot::makeMove(int timeout) {
     }
     return move;
 }
+//End Monte carlo tree search
 
 void C4Bot::move(int timeout) {
     //"C:\Users\renda\Desktop\c4ui.exe" "C:\Users\renda\Desktop\Git\four-in-a-row\cmake-build-debug\four-in-a-row.exe"
 
     //Monte carlo tree search
-    begin = std::chrono::steady_clock::now();
-    std::cout << "place_disc " << makeMove(time_per_move + 10000/30) << std::endl;
+    //begin = std::chrono::steady_clock::now();
+    //std::cout << "place_disc " << makeMove(time_per_move + 10000/30) << std::endl;
 
     //Alpha beta
-    //std::cout << "place_disc " << alphaBeta(state, 10) << std::endl;
+    std::cout << "place_disc " << alphaBeta(state, 12) << std::endl;
 
     //Original
 	//std::vector<Move> moves = getMoves(state);

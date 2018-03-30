@@ -1,6 +1,5 @@
-//
-// Created by renda on 29-3-2018.
-//
+//Node.h
+//Rendall Schijven
 
 #ifndef NODE_H
 #define NODE_H

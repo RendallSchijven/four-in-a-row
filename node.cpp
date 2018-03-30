@@ -1,6 +1,5 @@
-//
-// Created by renda on 29-3-2018.
-//
+//Node.cpp
+//Rendall Schijven
 
 #include "node.h"
 

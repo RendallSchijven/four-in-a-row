@@ -1,5 +1,5 @@
 // c4bot.h
-// Aswin van Woudenberg
+// Aswin van Woudenberg & Rendall Schijven
 
 #ifndef C4BOT_H
 #define C4BOT_H
@@ -30,6 +30,16 @@ class C4Bot {
 	void setting(std::string &key, std::string &value);
 	void update(std::string &key, std::string &value);
 	void move(int timeout);
+
+	Move alphaBeta(const State &board, int depth);
+	std::vector<int> minimax(const State &board, const Player &player, int depth, int alpha, int beta);
+	int evaluate(const Player player, const State board);
+    EvalTable evalTable = {{3, 4, 5, 7, 5, 4, 3},
+                           {4, 6, 8, 10, 8, 6, 4},
+                           {5, 8, 11, 13, 11, 8, 5},
+                           {5, 8, 11, 13, 11, 8, 5},
+                           {4, 6, 8, 10, 8, 6, 4},
+                           {3, 4, 5, 7, 5, 4, 3}};
 
 	int getTimeElapsed();
 	double selectfn(Node* n);

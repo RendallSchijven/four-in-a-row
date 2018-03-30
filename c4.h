@@ -14,6 +14,7 @@
 enum class Player { None, X, O };
 using Move = int;
 using State = std::array<std::array<Player,7>,6>;
+using EvalTable = std::vector<std::vector<int>>;
 
 // used to get a random element from a container
 template<typename Iter, typename RandomGenerator>
