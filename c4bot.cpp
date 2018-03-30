@@ -29,8 +29,8 @@ int C4Bot::evaluate(const Player player, const State board)
 {
     Player opponent = (player == Player::X) ? Player::O : Player::X;
 
-    //if(getWinner(board) == player) return 10000;
-    //if(getWinner(board) == opponent) return -10000;
+    if(getWinner(board) == player) return 10000;
+    if(getWinner(board) == opponent) return -10000;
 
     int utility = 138;
     int score = 0;
@@ -242,7 +242,7 @@ void C4Bot::move(int timeout) {
     //std::cout << "place_disc " << makeMove(time_per_move + 10000/30) << std::endl;
 
     //Alpha beta
-    std::cout << "place_disc " << alphaBeta(state, 12) << std::endl;
+    std::cout << "place_disc " << alphaBeta(state, 3) << std::endl;
 
     //Original
 	//std::vector<Move> moves = getMoves(state);
