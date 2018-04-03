@@ -239,10 +239,10 @@ void C4Bot::move(int timeout) {
 
     //Monte carlo tree search
     //begin = std::chrono::steady_clock::now();
-    //std::cout << "place_disc " << makeMove(time_per_move + 10000/30) << std::endl;
+    std::cout << "place_disc " << makeMove(time_per_move + 10000/30) << std::endl;
 
     //Alpha beta
-    std::cout << "place_disc " << alphaBeta(state, 3) << std::endl;
+    //std::cout << "place_disc " << alphaBeta(state, 3) << std::endl;
 
     //Original
 	//std::vector<Move> moves = getMoves(state);
