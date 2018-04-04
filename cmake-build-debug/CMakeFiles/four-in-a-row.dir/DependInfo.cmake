@@ -7,7 +7,6 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/c4.cpp" "/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/cmake-build-debug/CMakeFiles/four-in-a-row.dir/c4.cpp.o"
   "/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/c4bot.cpp" "/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/cmake-build-debug/CMakeFiles/four-in-a-row.dir/c4bot.cpp.o"
   "/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/main.cpp" "/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/cmake-build-debug/CMakeFiles/four-in-a-row.dir/main.cpp.o"
-  "/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/node.cpp" "/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/cmake-build-debug/CMakeFiles/four-in-a-row.dir/node.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

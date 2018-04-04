@@ -204,33 +204,6 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/four-in-a-row.dir/build.make CMakeFiles/four-in-a-row.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-node.o: node.cpp.o
-
-.PHONY : node.o
-
-# target to build an object file
-node.cpp.o:
-	$(MAKE) -f CMakeFiles/four-in-a-row.dir/build.make CMakeFiles/four-in-a-row.dir/node.cpp.o
-.PHONY : node.cpp.o
-
-node.i: node.cpp.i
-
-.PHONY : node.i
-
-# target to preprocess a source file
-node.cpp.i:
-	$(MAKE) -f CMakeFiles/four-in-a-row.dir/build.make CMakeFiles/four-in-a-row.dir/node.cpp.i
-.PHONY : node.cpp.i
-
-node.s: node.cpp.s
-
-.PHONY : node.s
-
-# target to generate assembly for a file
-node.cpp.s:
-	$(MAKE) -f CMakeFiles/four-in-a-row.dir/build.make CMakeFiles/four-in-a-row.dir/node.cpp.s
-.PHONY : node.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -249,9 +222,6 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... node.o"
-	@echo "... node.i"
-	@echo "... node.s"
 .PHONY : help
 
 

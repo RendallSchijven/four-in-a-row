@@ -7,15 +7,9 @@ CMakeFiles/four-in-a-row.dir/c4.cpp.o: ../c4.h
 CMakeFiles/four-in-a-row.dir/c4bot.cpp.o: ../c4.h
 CMakeFiles/four-in-a-row.dir/c4bot.cpp.o: ../c4bot.cpp
 CMakeFiles/four-in-a-row.dir/c4bot.cpp.o: ../c4bot.h
-CMakeFiles/four-in-a-row.dir/c4bot.cpp.o: ../moveTable.h
-CMakeFiles/four-in-a-row.dir/c4bot.cpp.o: ../node.h
+CMakeFiles/four-in-a-row.dir/c4bot.cpp.o: ../openingBook.h
 
 CMakeFiles/four-in-a-row.dir/main.cpp.o: ../c4.h
 CMakeFiles/four-in-a-row.dir/main.cpp.o: ../c4bot.h
 CMakeFiles/four-in-a-row.dir/main.cpp.o: ../main.cpp
-CMakeFiles/four-in-a-row.dir/main.cpp.o: ../node.h
-
-CMakeFiles/four-in-a-row.dir/node.cpp.o: ../c4.h
-CMakeFiles/four-in-a-row.dir/node.cpp.o: ../node.cpp
-CMakeFiles/four-in-a-row.dir/node.cpp.o: ../node.h
 
