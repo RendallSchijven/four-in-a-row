@@ -31,6 +31,7 @@ void C4Bot::run() {
  * After running it for the desired amount of repetitions(i < amount of boards to be played)
  * i paste the contents of the text file into the vector in openingBook.h then it can be used by C4Bot::openingMoves.
  */
+//TODO move to separate source file
 void C4Bot::createPatterns() {
     //Loop that executes the program i times. Every loop 1 board is solved.
     for(int i = 0; i < 30000; i++)
@@ -40,6 +41,7 @@ void C4Bot::createPatterns() {
         std::vector<int> moveSaver;
         std::vector<Move> moves = getMoves(testState);
 
+        //TODO run at max depth
         while(moves.size() != 0)
         {
             Move m;

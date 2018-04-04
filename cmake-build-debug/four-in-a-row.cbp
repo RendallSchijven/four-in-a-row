@@ -80,6 +80,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/bookMaker.cpp">
+			<Option target="four-in-a-row"/>
+		</Unit>
 		<Unit filename="/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/c4.cpp">
 			<Option target="four-in-a-row"/>
 		</Unit>

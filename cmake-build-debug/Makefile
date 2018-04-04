@@ -123,6 +123,33 @@ four-in-a-row/fast:
 	$(MAKE) -f CMakeFiles/four-in-a-row.dir/build.make CMakeFiles/four-in-a-row.dir/build
 .PHONY : four-in-a-row/fast
 
+bookMaker.o: bookMaker.cpp.o
+
+.PHONY : bookMaker.o
+
+# target to build an object file
+bookMaker.cpp.o:
+	$(MAKE) -f CMakeFiles/four-in-a-row.dir/build.make CMakeFiles/four-in-a-row.dir/bookMaker.cpp.o
+.PHONY : bookMaker.cpp.o
+
+bookMaker.i: bookMaker.cpp.i
+
+.PHONY : bookMaker.i
+
+# target to preprocess a source file
+bookMaker.cpp.i:
+	$(MAKE) -f CMakeFiles/four-in-a-row.dir/build.make CMakeFiles/four-in-a-row.dir/bookMaker.cpp.i
+.PHONY : bookMaker.cpp.i
+
+bookMaker.s: bookMaker.cpp.s
+
+.PHONY : bookMaker.s
+
+# target to generate assembly for a file
+bookMaker.cpp.s:
+	$(MAKE) -f CMakeFiles/four-in-a-row.dir/build.make CMakeFiles/four-in-a-row.dir/bookMaker.cpp.s
+.PHONY : bookMaker.cpp.s
+
 c4.o: c4.cpp.o
 
 .PHONY : c4.o
@@ -213,6 +240,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... four-in-a-row"
+	@echo "... bookMaker.o"
+	@echo "... bookMaker.i"
+	@echo "... bookMaker.s"
 	@echo "... c4.o"
 	@echo "... c4.i"
 	@echo "... c4.s"
