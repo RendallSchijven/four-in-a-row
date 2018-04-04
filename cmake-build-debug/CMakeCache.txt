@@ -220,12 +220,6 @@ four-in-a-row_BINARY_DIR:STATIC=/cygdrive/c/Users/renda/Desktop/Git/four-in-a-ro
 //Value Computed by CMake
 four-in-a-row_SOURCE_DIR:STATIC=/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row
 
-//Value Computed by CMake
-peg_game_solver_BINARY_DIR:STATIC=/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row/cmake-build-debug
-
-//Value Computed by CMake
-peg_game_solver_SOURCE_DIR:STATIC=/cygdrive/c/Users/renda/Desktop/Git/four-in-a-row
-
 
 ########################
 # INTERNAL cache entries

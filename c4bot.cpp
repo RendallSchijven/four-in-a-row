@@ -375,12 +375,12 @@ void C4Bot::move(int timeout) {
 
     //Alpha beta
     Move move;
-    if(round <= 6){
+    if(round <= 5){
         move = startingMoves(state, your_botid);
     }
-    else if(round > 6)
+    else if(round > 5)
     {
-        int depth = 10;
+        int depth = 8;
         if(round % 2 == 0) depth += 1;
         move = alphaBeta(state, depth);
     }
