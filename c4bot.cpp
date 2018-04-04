@@ -3,6 +3,7 @@
 
 #include "c4bot.h"
 #include "node.h"
+#include "moveTable.h"
 
 #include <iostream>
 #include <sstream>
@@ -50,7 +51,7 @@ void C4Bot::createPatterns() {
                         m = 3;
                         first = false;
                     }
-                    else m = alphaBeta(testState, 10);
+                    else m = ABHelper(testState, 42);
                 } else{
                     m = *select_randomly(moves.begin(), moves.end());
                 }
@@ -61,7 +62,7 @@ void C4Bot::createPatterns() {
                 if(getCurrentPlayer(testState) == Player::O)
                 {
                     if(testState[5][3] == Player::None) m = 3;
-                    else m = alphaBeta(testState, 10);
+                    else m = ABHelper(testState, 42);
                 } else{
                     m = *select_randomly(moves.begin(), moves.end());
                 }
@@ -72,6 +73,8 @@ void C4Bot::createPatterns() {
 
             //Save the selected move
             moveSaver.push_back(m);
+
+            std::cout << m << std::endl;
 
             //Update moves
             moves = getMoves(testState);
@@ -124,7 +127,7 @@ Move C4Bot::startingMoves(const State board, int myBot)
     }
 
     //If no results were found in the library run the alphaBeta algorithm.
-    return alphaBeta(state, 8);
+    return ABHelper(state, 8);
 }
 
 //Start alpha beta
@@ -165,7 +168,7 @@ int C4Bot::evaluate(const Player player, const State board)
  *
  * @return The score and move to be played.
  */
-std::vector<int> C4Bot::minimax(const State &board, const Player &player, int depth, int alpha, int beta)
+std::vector<int> C4Bot::alphaBeta(const State &board, const Player &player, int depth, int alpha, int beta)
 {
     //Get all the possible moves
     std::vector<Move> moves = getMoves(board);
@@ -177,7 +180,7 @@ std::vector<int> C4Bot::minimax(const State &board, const Player &player, int de
     int bestMove = -1;
 
     //If max depth has been reached, score the board using the evaluation function
-    if(depth == 0){
+    if(depth == 0 || getWinner(board) != Player::None){
         score = evaluate(player, board);
         return {score,bestMove};
     }
@@ -195,7 +198,7 @@ std::vector<int> C4Bot::minimax(const State &board, const Player &player, int de
             if(player == Player::O)
             {
                 //Call recursively with the opposite player.
-                score = minimax(tempboard, Player::X, depth, alpha, beta)[0];
+                score = alphaBeta(tempboard, Player::X, depth, alpha, beta)[0];
 
                 //If the score is greater than alpha, alpha becomes score and bestmove is current move.
                 if(score > alpha)
@@ -207,7 +210,7 @@ std::vector<int> C4Bot::minimax(const State &board, const Player &player, int de
             //If player is minimizing player
             else
             {
-                score = minimax(tempboard, Player::O, depth, alpha, beta)[0];
+                score = alphaBeta(tempboard, Player::O, depth, alpha, beta)[0];
 
                 if(score < beta)
                 {
@@ -231,10 +234,10 @@ std::vector<int> C4Bot::minimax(const State &board, const Player &player, int de
  *
  * @return The move to be played
  */
-Move C4Bot::alphaBeta(const State &board, int depth)
+Move C4Bot::ABHelper(const State &board, int depth)
 {
     //Get the move using alpha beta algorithm.
-    Move result = minimax(board, getCurrentPlayer(board), depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max())[1];
+    Move result = alphaBeta(board, getCurrentPlayer(board), depth, std::numeric_limits<int>::min(), std::numeric_limits<int>::max())[1];
 
     //If alpha beta algorithm fails to provide correct output return a random move.
     std::vector<Move> moves = getMoves(board);
@@ -382,7 +385,7 @@ void C4Bot::move(int timeout) {
     {
         int depth = 8;
         if(round % 2 == 0) depth += 1;
-        move = alphaBeta(state, depth);
+        move = ABHelper(state, depth);
     }
 
     std::cout << "place_disc " << move << std::endl;
