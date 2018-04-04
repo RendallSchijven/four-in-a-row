@@ -1,5 +1,5 @@
 // c4.h
-// Aswin van Woudenberg
+// Aswin van Woudenberg & Rendall Schijven
 
 #ifndef C4_H
 #define C4_H
@@ -15,6 +15,7 @@ enum class Player { None, X, O };
 using Move = int;
 using State = std::array<std::array<Player,7>,6>;
 using EvalTable = std::vector<std::vector<int>>;
+using StartLibrary = std::vector<std::vector<int>>;
 
 // used to get a random element from a container
 template<typename Iter, typename RandomGenerator>

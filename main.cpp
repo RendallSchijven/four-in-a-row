@@ -6,6 +6,7 @@
 int main() {
 	C4Bot bot;
 	bot.run();
+    //bot.createPatterns();
 	
 	return 0;
 }
